@@ -77,6 +77,13 @@ const config: Config = {
         sans: ["var(--font-sans)", "sans-serif"],
         mono: ["var(--font-mono)", "monospace"],
       },
+      fontSize: {
+        h1: ["2.25rem", { lineHeight: "2.75rem", fontWeight: "700" }], // 36px bold
+        h2: ["1.5rem", { lineHeight: "2rem", fontWeight: "700" }],    // 24px bold
+        h3: ["1.25rem", { lineHeight: "1.75rem", fontWeight: "600" }], // 20px semibold
+        base: ["1rem", { lineHeight: "1.5rem", fontWeight: "400" }],   // 16px regular
+        sm: ["0.875rem", { lineHeight: "1.25rem", fontWeight: "400" }], // 14px regular
+      },
       keyframes: {
         "fade-in-scale": {
           "0%": { opacity: "0", transform: "scale(0.95)" },
