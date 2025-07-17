@@ -10,17 +10,17 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-[#E23A00] text-white hover:bg-[#c53200] px-5 py-2 min-h-[40px] min-w-[100px] text-base",
+          "bg-primary text-primary-foreground hover:bg-[#e25500] px-5 py-2 min-h-[40px] min-w-[100px] text-base border border-transparent rounded-[var(--radius)]",
         destructive:
-          "bg-[#F9B3B3] text-white hover:bg-[#e57373] px-5 py-2 min-h-[40px] min-w-[100px] text-base",
+          "bg-destructive text-destructive-foreground hover:bg-[#c53200] px-5 py-2 min-h-[40px] min-w-[100px] text-base border border-transparent rounded-[var(--radius)]",
         outline:
-          "bg-white border border-[#B0B0B0] text-[#222] hover:bg-[#F3F4F6] px-5 py-2 min-h-[40px] min-w-[100px] text-base",
+          "bg-white border border-border text-foreground hover:bg-muted px-5 py-2 min-h-[40px] min-w-[100px] text-base rounded-[var(--radius)]",
         secondary:
-          "bg-[#F3F4F6] text-[#222] border border-[#E5E7EB] hover:bg-[#E5E7EB] px-5 py-2 min-h-[40px] min-w-[100px] text-base",
+          "bg-secondary text-secondary-foreground border border-border hover:bg-[#E5E7EB] px-5 py-2 min-h-[40px] min-w-[100px] text-base rounded-[var(--radius)]",
         ghost:
-          "bg-transparent text-[#B0B0B0] hover:bg-[#F3F4F6] px-5 py-2 min-h-[40px] min-w-[100px] text-base",
-        link: "bg-transparent text-[#E23A00] underline-offset-4 hover:underline px-5 py-2 min-h-[40px] min-w-[100px] text-base",
-        disabled: "bg-[#F9C6B3] text-white px-5 py-2 min-h-[40px] min-w-[100px] text-base cursor-not-allowed opacity-60",
+          "bg-transparent text-muted-foreground hover:bg-muted px-5 py-2 min-h-[40px] min-w-[100px] text-base border border-transparent rounded-[var(--radius)]",
+        link: "bg-transparent text-primary underline-offset-4 hover:underline px-5 py-2 min-h-[40px] min-w-[100px] text-base border border-transparent rounded-[var(--radius)]",
+        disabled: "bg-muted text-muted-foreground px-5 py-2 min-h-[40px] min-w-[100px] text-base cursor-not-allowed opacity-60 border border-transparent rounded-[var(--radius)]",
       },
       size: {
         sm: "h-8 px-4 py-1.5 text-sm",
@@ -28,10 +28,20 @@ const buttonVariants = cva(
         lg: "h-12 px-6 py-3 text-lg",
         icon: "size-10",
       },
+      block: {
+        true: "w-full",
+        false: "",
+      },
+      loading: {
+        true: "opacity-70 cursor-wait",
+        false: "",
+      },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
+      block: false,
+      loading: false,
     },
   },
 );
@@ -40,20 +50,39 @@ function Button({
   className,
   variant,
   size,
+  block = false,
+  loading = false,
+  icon,
   asChild = false,
+  children,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
+    block?: boolean;
+    loading?: boolean;
+    icon?: React.ReactNode;
   }) {
   const Comp = asChild ? Slot : "button";
+  const content = (
+    <>
+      {icon && <span className="mr-2 flex items-center">{icon}</span>}
+      {children}
+      {loading && (
+        <span className="ml-2 animate-spin border-2 border-t-2 border-t-primary border-primary-foreground rounded-full w-4 h-4 inline-block align-middle" />
+      )}
+    </>
+  );
 
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size, block, loading, className }))}
+      aria-busy={loading || undefined}
       {...props}
-    />
+    >
+      {asChild ? <span>{content}</span> : content}
+    </Comp>
   );
 }
 
